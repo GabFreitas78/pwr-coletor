@@ -1,0 +1,13 @@
+<header class="bg-white shadow-md py-4 px-6 flex justify-between items-center z-20">
+    @if (showBack()) {
+    <button mat-button routerLink="/" aria-label="Voltar" class="p-2">
+        <span class="material-icons">arrow_back</span>
+    </button>
+    }
+
+    @if (title()) {
+    <h1 class="text-xl font-medium">{{title()}}</h1>
+    }
+
+    <div class="w-8"></div>
+</header>

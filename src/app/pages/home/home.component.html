@@ -1,0 +1,25 @@
+<app-drawer #drawer>
+  <div class="min-h-screen bg-gray-100 flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+      <button mat-button (click)="drawer.drawerRef().toggle()" aria-label="Menu" class="p-2">
+        <span class="material-icons">menu</span>
+      </button>
+
+      <h1 class="text-2xl font-medium text-center">PWR Coletor</h1>
+
+      <button mat-button routerLink="/conferencias" aria-label="Conferências" class="p-2">
+        <span class="material-icons">list_alt</span>
+      </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex justify-center items-center">
+      <button mat-flat-button routerLink="/coletar"
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center gap-2 transition">
+        <span class="material-icons text-3xl">photo_camera</span>
+        <span>Coletar Estoque</span>
+      </button>
+    </main>
+  </div>
+</app-drawer>

@@ -1,0 +1,21 @@
+<!-- src/app/pages/home/home.component.html -->
+<mat-sidenav-container class="min-h-screen bg-gray-100">
+  <mat-sidenav #drawer mode="over" class="p-4 w-64">
+    <h2 class="text-lg font-normal mb-4">Menu</h2>
+    <nav class="flex flex-col gap-2">
+      <button mat-button routerLink="/importar-produtos" mat-button>
+        <span class="material-icons mr-2">file_upload</span>
+        Importar Produtos
+      </button>
+      <button mat-button routerLink="/produtos-importados" mat-button>
+        <span class="material-icons mr-2">inventory</span>
+        Produtos Importados
+      </button>
+      <button mat-button routerLink="/exportar-dados" mat-button>
+        <span class="material-icons mr-2">file_download</span>
+        Exportar Dados
+      </button>
+    </nav>
+  </mat-sidenav>
+  <mat-drawer-content><ng-content></ng-content></mat-drawer-content>
+</mat-sidenav-container>
