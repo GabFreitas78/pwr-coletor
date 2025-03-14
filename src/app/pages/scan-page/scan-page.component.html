@@ -1,1 +1,22 @@
-<p>scan-page works!</p>
+<div class="relative object-contain w-screen h-screen flex">
+  <zxing-scanner
+    (torchCompatible)="flashlightCompativel = $event"
+    class="!flex m-auto max-h-screen"
+    [torch]="flashlightStatus"
+    [formats]="allowedFormats"
+    (camerasFound)="camerasFound = $event"
+    (scanSuccess)="handleScanCodigo($event)"
+  />
+  @if (flashlightCompativel) {
+  <button
+    (click)="flashlightStatus = !flashlightStatus"
+    mat-icon-button
+    aria-label="Lanterna"
+    class="!w-20 !bg-secondary !text-white !h-20 !absolute !bottom-10 !left-1/2 !-translate-x-1/2 !flex !items-center !justify-center"
+  >
+    <mat-icon>{{
+      flashlightStatus ? "flashlight_on" : "flashlight_off"
+    }}</mat-icon>
+  </button>
+  }
+</div>
