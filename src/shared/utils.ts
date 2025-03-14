@@ -22,9 +22,9 @@ export function lerCSVDoLocalStorage(): Produto[] {
 
   return resultado.data.map((item, index) => ({
     id: item.id || index.toString(),
-    nome: item.nome?.trim() || 'Desconhecido',
-    unidade: item.unidade?.trim() || 'und',
-    codigo: item.codigo?.trim() || '',
+    nome: item.nome.trim(),
+    unidade: item.unidade.trim(),
+    codigo: item.codigo.trim(),
   }));
 }
 
