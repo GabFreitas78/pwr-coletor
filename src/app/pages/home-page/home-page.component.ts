@@ -25,7 +25,8 @@ export class HomePageComponent {
     buttonElement.blur();
     this.dialog.open(ImportarDadosDialogComponent, {
       minHeight: '300px',
-      height: '50%',
+      height: '70vh',
+      width: '80vw',
       maxHeight: '600px',
     });
   }

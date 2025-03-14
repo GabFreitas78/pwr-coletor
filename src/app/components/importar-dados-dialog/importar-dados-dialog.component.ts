@@ -10,6 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { lerCSVDoLocalStorage } from '../../../shared/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-importar-dados-dialog',
@@ -20,6 +22,7 @@ export class ImportarDadosDialogComponent {
   readonly fileInputRef =
     viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
   readonly dialogRef = inject(MatDialogRef<ImportarDadosDialogComponent>);
+  readonly _snackBar = inject(MatSnackBar);
   private selectedFile = signal<File | null>(null);
   readonly selectedFilename = computed(() => this.selectedFile()?.name);
   readonly fileType = computed(() =>
@@ -76,7 +79,27 @@ export class ImportarDadosDialogComponent {
   async importarDados() {
     const fileContent = await this.readFileContent(this.selectedFile()!);
     localStorage.setItem('csvData', fileContent);
-    this.dialogRef.close();
+    if (this.checarFormatoDados()) {
+      this.dialogRef.close();
+      this._snackBar.open('Dados importados com sucesso', undefined, {
+        duration: 2000,
+      });
+    } else {
+      localStorage.removeItem('csvData');
+      this._snackBar.open('Formato inválido dos dados importados', undefined, {
+        duration: 5000,
+      });
+    }
+  }
+
+  private checarFormatoDados(): boolean {
+    try {
+      lerCSVDoLocalStorage();
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   }
 
   private readFileContent(file: File): Promise<string> {

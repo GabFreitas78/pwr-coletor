@@ -1,28 +1,41 @@
-<h2 mat-dialog-title class="!font-sans">Importar dados</h2>
-<mat-dialog-content>
+<h2 mat-dialog-title class="!font-sans !font-semibold">Importar dados</h2>
+<mat-dialog-content class="!flex !flex-col">
+  <p class="text-md mb-4">
+    Escolha a base de produtos que deseja importar. Certifique-se de que o
+    arquivo está no formato correto. Caso tenha dúvidas, baixe o exemplo
+    <a
+      href="exemplo.csv"
+      download="exemplo.csv"
+      class="text-primary decoration-none underline visited:!text-primary"
+      >aqui</a
+    >.
+  </p>
   <div
     matRipple
     (click)="triggerFileInput()"
     (drop)="onDrop($event)"
     (dragover)="onDragOver($event)"
-    class="border-2 hover:cursor-pointer border-dashed border-secondary rounded-md p-4 flex items-center flex-wrap gap-4 bg-secondary/20 text-secondary"
+    class="!flex-grow border-3 hover:cursor-pointer border-dashed border-secondary rounded-md p-4 flex items-center flex-wrap gap-2 bg-secondary/20 text-secondary"
   >
-    <mat-icon class="!m-auto">upload</mat-icon>
-    <p class="text-lg font-medium">
-      Arraste & solte ou clique para escolhar um arquivo
+    <mat-icon
+      class="!m-auto !items-center !flex !justify-center !text-[4rem] !w-25 !h-20"
+      >cloud_upload</mat-icon
+    >
+    <p class="text-md font-medium text-center">
+      Arraste & solte ou clique para importar sua base de produtos. O arquivo
+      deve estar no formato .csv e ter no máximo 4MB.
     </p>
     <input
       class="hidden"
       #fileInput
-      accept=".csv,.xlsx"
+      accept=".csv"
       (change)="onFileSelected($event)"
       type="file"
     />
   </div>
   @if(selectedFilename()) {
-  <p class="mt-5 text-lg font-medium py-2">Arquivo selecionado:</p>
-  <div class="bg-background rounded-md p-4">
-    <div class="flex justify-around items-center">
+  <div class="bg-background rounded-md p-4 w-full mt-5">
+    <div class="flex justify-between items-center">
       <div class="text-lg font-medium">
         {{ selectedFilename() }}
         <span class="ml-2 text-sm font-medium text-gray-500">{{
