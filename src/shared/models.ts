@@ -5,3 +5,10 @@ export interface Produto {
   unidade: string;
   codigo: string;
 }
+
+export interface Balanco {
+  id: number;
+  nome: string;
+  dataCriacao: Date;
+  produtosIds: string[];
+}

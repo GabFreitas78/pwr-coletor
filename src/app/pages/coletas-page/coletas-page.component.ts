@@ -2,10 +2,13 @@ import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { MatListModule } from '@angular/material/list';
 import { ColetaItemComponent } from '../../components/coleta-item/coleta-item.component';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { Produto } from '../../../shared/models';
-import { lerCSVDoLocalStorage } from '../../../shared/utils';
+import {
+  lerBalancosDoLocalStorage,
+  lerCSVDoLocalStorage,
+} from '../../../shared/utils';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
@@ -42,6 +45,7 @@ export class ColetasPageComponent implements OnInit, OnDestroy {
   filtro: string = '';
 
   readonly route = inject(ActivatedRoute);
+  readonly router = inject(Router);
   balancoId!: string;
   private searchSubject = new Subject<string>();
   private unsubscribe$ = new Subject<void>();
@@ -52,10 +56,20 @@ export class ColetasPageComponent implements OnInit, OnDestroy {
   pageIndex = 0; // Página atual
 
   ngOnInit(): void {
-    this.produtos = lerCSVDoLocalStorage(); // Carrega todos os produtos do CSV
     this.produtosFiltrados = [...this.produtos]; // Inicializa os filtrados
     this.atualizarPaginacao(); // Define os produtos da primeira página
     this.balancoId = this.route.snapshot.paramMap.get('balancoId')!;
+    const produtosIds = lerBalancosDoLocalStorage().find(
+      (balanco) => balanco.id === Number(this.balancoId)
+    )?.produtosIds;
+
+    if (produtosIds) {
+      this.produtos = lerCSVDoLocalStorage().filter((produto) =>
+        produtosIds.includes(produto.id.toString())
+      );
+    } else {
+      this.produtos = [];
+    }
 
     this.searchSubject
       .pipe(
@@ -92,6 +106,10 @@ export class ColetasPageComponent implements OnInit, OnDestroy {
     );
     this.pageIndex = 0; // Resetar para primeira página ao filtrar
     this.atualizarPaginacao();
+  }
+
+  handleEncerrarBalanco() {
+    this.router.navigate(['/']);
   }
 
   ngOnDestroy(): void {

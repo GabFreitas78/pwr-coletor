@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { HeaderComponent } from '../../components/header/header.component';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,13 +14,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BalancoItemComponent } from '../../components/balanco-item/balanco-item.component';
 import { FormsModule } from '@angular/forms';
-
-interface Balanco {
-  id: number;
-  nome: string;
-  dataCriacao: Date;
-  quantidadeProdutos: number;
-}
+import { Balanco } from '../../../shared/models';
+import {
+  lerBalancosDoLocalStorage,
+  salvarNovoBalanco,
+} from '../../../shared/utils';
 
 @Component({
   selector: 'app-balanco-page',
@@ -34,30 +32,15 @@ interface Balanco {
   ],
   templateUrl: './balanco-page.component.html',
 })
-export class BalancoPageComponent {
-  balancos: Balanco[] = [
-    {
-      id: 1,
-      nome: 'Balanço Q1 2025',
-      dataCriacao: new Date(2025, 0, 15),
-      quantidadeProdutos: 120,
-    },
-    {
-      id: 2,
-      nome: 'Balanço Q2 2025',
-      dataCriacao: new Date(2025, 3, 10),
-      quantidadeProdutos: 95,
-    },
-    {
-      id: 3,
-      nome: 'Balanço de Natal',
-      dataCriacao: new Date(2024, 11, 20),
-      quantidadeProdutos: 200,
-    },
-  ];
+export class BalancoPageComponent implements OnInit {
+  balancos!: Balanco[];
 
   readonly router = inject(Router);
   readonly dialog = inject(MatDialog);
+
+  ngOnInit(): void {
+    this.balancos = lerBalancosDoLocalStorage();
+  }
 
   adicionarNovoBalanco() {
     const buttonElement = document.activeElement as HTMLElement;
@@ -65,7 +48,8 @@ export class BalancoPageComponent {
     const dialogRef = this.dialog.open(AddBalancoDialog);
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
-        console.log(result);
+        salvarNovoBalanco(result);
+        this.balancos = lerBalancosDoLocalStorage();
       }
     });
   }

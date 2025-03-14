@@ -26,6 +26,7 @@
           [quantidade]="produto.quantidade"
           [codigo]="produto.codigo"
           [unidade]="produto.unidade"
+          [balancoId]="balancoId"
         />
       </mat-list-item>
       @if (!$last) {
@@ -92,7 +93,7 @@
       <button
         class="!text-lg !w-full !rounded-md"
         mat-flat-button
-        routerLink="/"
+        (click)="handleEncerrarBalanco()"
       >
         Encerrar
       </button>

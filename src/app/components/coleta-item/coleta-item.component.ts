@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './coleta-item.component.html',
 })
 export class ColetaItemComponent {
+  readonly balancoId = input.required<string>();
   readonly nome = input.required<string>();
   readonly codigo = input.required<string>();
   quantidade = model.required<number>();
@@ -33,7 +34,7 @@ export class ColetaItemComponent {
 
   handleBlur() {
     this.editandoQuantidade = false;
-    patchProduto(this.codigo(), this.quantidade());
+    patchProduto(this.codigo(), this.quantidade(), this.balancoId());
     this.inputQtdRef().nativeElement.blur();
   }
 

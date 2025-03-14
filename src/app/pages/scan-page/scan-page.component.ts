@@ -83,7 +83,8 @@ export class ScanPageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((nova_quantidade: number) => {
       if (nova_quantidade !== undefined) {
-        if (nova_quantidade) patchProduto(codigo, nova_quantidade);
+        if (nova_quantidade)
+          patchProduto(codigo, nova_quantidade, this.balancoId);
         this.router.navigate(['/coleta/minhas-coletas', this.balancoId]);
       }
       this.dialogOpen = false;
