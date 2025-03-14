@@ -138,8 +138,14 @@ class QuantidadeDialog implements OnInit {
 
   ngOnInit(): void {
     this.dialogRef.afterOpened().subscribe(() => {
-      this.inputQtdRef().nativeElement.focus();
-      this.inputQtdRef().nativeElement.select();
+      const inputEl = this.inputQtdRef().nativeElement;
+      inputEl.focus();
+      inputEl.select();
+
+      // Verifica se é um dispositivo mobile e simula um toque
+      if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+        inputEl.click();
+      }
     });
   }
 

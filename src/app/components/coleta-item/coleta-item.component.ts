@@ -19,8 +19,14 @@ export class ColetaItemComponent {
     viewChild.required<ElementRef<HTMLInputElement>>('inputQtd');
 
   handleEdit() {
-    this.editandoQuantidade = !this.editandoQuantidade;
-    this.inputQtdRef().nativeElement.focus();
-    this.inputQtdRef().nativeElement.select();
+    this.editandoQuantidade = true;
+    const inputEl = this.inputQtdRef().nativeElement;
+    inputEl.readOnly = false;
+    inputEl.focus();
+    inputEl.select();
+    // Verifica se é um dispositivo mobile e simula um toque
+    if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      inputEl.click();
+    }
   }
 }
