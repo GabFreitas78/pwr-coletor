@@ -21,6 +21,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getQtdProduto, patchProduto } from '../../../shared/utils';
 
@@ -40,17 +41,18 @@ export class ScanPageComponent implements OnInit {
   balancoId!: string;
 
   readonly dialog = inject(MatDialog);
+  readonly _snackBar = inject(MatSnackBar);
   readonly router = inject(Router);
   readonly route = inject(ActivatedRoute);
 
   flashlightCompativel?: boolean;
+  cameraAtualIndex = 0;
   flashlightStatus = false;
+  scannerAtivado?: boolean;
   dialogOpen = false;
   camerasFound: MediaDeviceInfo[] = [];
   selectedCamera?: MediaDeviceInfo;
   alternarCameraDisponivel?: boolean;
-  cameraAtualIndex?: number;
-  scannerComErro = signal<boolean>(false);
 
   ngOnInit(): void {
     this.balancoId = this.route.snapshot.paramMap.get('balancoId')!;
@@ -58,22 +60,18 @@ export class ScanPageComponent implements OnInit {
 
   handleCamerasFound(camerasFound: MediaDeviceInfo[]) {
     this.camerasFound = camerasFound;
-    if (camerasFound.length === 0) {
-      this.alternarCameraDisponivel = false;
-      this.scannerComErro.set(true);
-      console.log('Sem câmeras para scan');
-    } else if (camerasFound.length !== 2) {
-      this.alternarCameraDisponivel = false;
-    } else {
-      this.alternarCameraDisponivel = true;
-      this.cameraAtualIndex = 0;
-      this.updateSelectedCamera(camerasFound[this.cameraAtualIndex]);
-    }
-  }
+    const qtdCameras = this.camerasFound.length;
 
-  updateSelectedCamera(newSelectedCamera: MediaDeviceInfo) {
-    if (newSelectedCamera.deviceId !== this.selectedCamera?.deviceId) {
-      this.selectedCamera = newSelectedCamera;
+    if (qtdCameras === 0) {
+      this.scannerAtivado = false;
+      console.log('Sem câmeras para o scan');
+    } else {
+      this.scannerAtivado = true;
+      if (qtdCameras === 2) {
+        this.alternarCameraDisponivel = true;
+      } else {
+        this.alternarCameraDisponivel = false;
+      }
     }
   }
 
@@ -82,13 +80,13 @@ export class ScanPageComponent implements OnInit {
     if (this.alternarCameraDisponivel && this.cameraAtualIndex !== undefined) {
       this.cameraAtualIndex =
         (this.cameraAtualIndex + 1) % this.camerasFound.length;
-      this.updateSelectedCamera(this.camerasFound[this.cameraAtualIndex]);
+      this.selectedCamera = this.camerasFound[this.cameraAtualIndex];
     }
   }
 
   handleScanError(error: Error) {
     console.log('Erro com o scanner: ', error);
-    this.scannerComErro.set(true);
+    this.scannerAtivado = false;
   }
 
   handleScanCodigo(codigo: string) {
@@ -100,8 +98,18 @@ export class ScanPageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((nova_quantidade: number) => {
       if (nova_quantidade !== undefined) {
-        patchProduto(codigo, nova_quantidade, this.balancoId);
-        this.router.navigate(['/coleta/minhas-coletas', this.balancoId]);
+        try {
+          patchProduto(codigo, nova_quantidade, this.balancoId);
+          this.router.navigate(['/coleta/minhas-coletas', this.balancoId]);
+        } catch (err) {
+          this._snackBar.open(
+            'Você não tem produto importado para o código scaneado',
+            undefined,
+            {
+              duration: 5000,
+            }
+          );
+        }
       }
       this.dialogOpen = false;
     });

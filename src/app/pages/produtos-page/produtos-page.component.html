@@ -1,9 +1,5 @@
 <div class="flex flex-col min-h-screen">
-  <app-header title="Minhas coletas">
-    <button class="!text-white !leading-none" mat-icon-button routerLink="/">
-      <mat-icon>home</mat-icon>
-    </button>
-  </app-header>
+  <app-header [showBack]="true" title="Produtos importados" />
 
   <main class="flex-grow bg-background flex flex-col">
     <!-- Barra de Pesquisa -->
@@ -29,7 +25,6 @@
           [nome]="produto.nome"
           [codigo]="produto.codigo"
           [unidade]="produto.unidade"
-          [balancoId]="balancoId"
         />
       </mat-list-item>
       @if (!$last) {
@@ -81,25 +76,5 @@
       (page)="mudarPagina($event)"
       showFirstLastButtons
     ></mat-paginator>
-
-    <div
-      class="flex m-auto flex-col items-center justify-center gap-10 max-w-200 w-[80%]"
-    >
-      <button
-        class="!flex !items-center !gap-2 !text-lg !leading-none !w-full !bg-primary !text-white !rounded-md !font-semibold"
-        mat-raised-button
-        [routerLink]="`/coleta/scan/${balancoId}`"
-      >
-        <span class="material-icons text-3xl">photo_camera</span>
-        <span>Continuar coleta</span>
-      </button>
-      <button
-        class="!text-lg !w-full !rounded-md"
-        mat-flat-button
-        (click)="handleEncerrarBalanco()"
-      >
-        Encerrar
-      </button>
-    </div>
   </main>
 </div>

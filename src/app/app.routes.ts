@@ -3,6 +3,7 @@ import { BalancoPageComponent } from './pages/balanco-page/balanco-page.componen
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { ScanPageComponent } from './pages/scan-page/scan-page.component';
 import { ColetasPageComponent } from './pages/coletas-page/coletas-page.component';
+import { ProdutosPageComponent } from './pages/produtos-page/produtos-page.component';
 
 export const routes: Routes = [
   {
@@ -25,5 +26,9 @@ export const routes: Routes = [
         component: ColetasPageComponent,
       },
     ],
+  },
+  {
+    path: 'produtos',
+    component: ProdutosPageComponent,
   },
 ];

@@ -11,12 +11,14 @@ export function lerCSVDoLocalStorage(): Produto[] {
   const resultado = Papa.parse(csvData, {
     header: true, // Converte colunas em chaves do objeto
     skipEmptyLines: true, // Remove linhas vazias
+    delimiter: ',',
     // transformHeader: (header, index) => header.toLowerCase(),
   });
 
+  let id = 0;
   // Mapeando os dados para a interface Produto
   return resultado.data.map((item: any) => ({
-    id: item.id || '',
+    id: `${id++}`,
     nome: item.descricao || item.nome || item.name || item.desc || '',
     unidade: item.unidade || item.und || 'und',
     codigo: item.codigo || item.cod || '',
@@ -54,8 +56,7 @@ export function patchProduto(
     (balanco) => balanco.id === Number(balancoId)
   );
   if (balancoIndex === -1) {
-    console.warn(`Balanço com o id ${balancoId} não existe`);
-    return;
+    throw Error(`Balanço com o id ${balancoId} não existe`);
   }
 
   const balanco = balancos[balancoIndex];
@@ -65,8 +66,7 @@ export function patchProduto(
   );
 
   if (!produto) {
-    console.warn(`Produto com o código ${codigo} não existe`);
-    return;
+    throw Error(`Produto com o código ${codigo} não existe`);
   }
 
   let balancoProduto = balanco.produtos.find((p) => p.id === produto.id);
@@ -124,12 +124,13 @@ export function getQtdProduto(codigo: string, balancoId: string): number {
 }
 
 export function salvarNovoBalanco(nome: string) {
+  const produtos = lerCSVDoLocalStorage();
   const balancos = lerBalancosDoLocalStorage();
   const novoBalanco: Balanco = {
     dataCriacao: new Date(),
     id: balancos.length,
     nome: nome,
-    produtos: [],
+    produtos: produtos.map((produto) => ({ id: produto.id, quantidade: 0 })),
   };
   balancos.push(novoBalanco);
 

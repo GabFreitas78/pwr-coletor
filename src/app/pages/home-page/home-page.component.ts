@@ -8,7 +8,13 @@ import { ImportarDadosDialogComponent } from '../../components/importar-dados-di
 
 @Component({
   selector: 'app-home-page',
-  imports: [HeaderComponent, MatButtonModule, MatIconModule, RouterLink],
+  imports: [
+    HeaderComponent,
+    MatButtonModule,
+    MatIconModule,
+    RouterLink,
+    MatIconModule,
+  ],
   templateUrl: './home-page.component.html',
 })
 export class HomePageComponent {

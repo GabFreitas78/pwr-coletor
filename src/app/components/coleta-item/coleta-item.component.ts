@@ -17,18 +17,20 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './coleta-item.component.html',
 })
 export class ColetaItemComponent implements OnInit {
-  readonly balancoId = input.required<string>();
+  readonly balancoId = input<string>();
   readonly nome = input.required<string>();
   readonly codigo = input.required<string>();
   readonly unidade = input<string>('und');
-  quantidade!: number;
+  quantidade?: number;
 
   editandoQuantidade = false;
   readonly inputQtdRef =
     viewChild.required<ElementRef<HTMLInputElement>>('inputQtd');
 
   ngOnInit(): void {
-    this.quantidade = getQtdProduto(this.codigo(), this.balancoId());
+    if (this.balancoId()) {
+      this.quantidade = getQtdProduto(this.codigo(), this.balancoId()!);
+    }
   }
 
   handleEdit() {
@@ -45,7 +47,7 @@ export class ColetaItemComponent implements OnInit {
 
   handleBlur() {
     this.editandoQuantidade = false;
-    patchProduto(this.codigo(), this.quantidade, this.balancoId());
+    patchProduto(this.codigo(), this.quantidade!, this.balancoId()!);
     this.inputQtdRef().nativeElement.blur();
   }
 
