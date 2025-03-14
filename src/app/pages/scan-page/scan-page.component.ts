@@ -70,7 +70,6 @@ export class ScanPageComponent implements OnInit {
       this.cameraAtualIndex =
         (this.cameraAtualIndex + 1) % this.camerasFound.length;
       this.selectedCamera = this.camerasFound[this.cameraAtualIndex];
-      console.log('Câmera alternada para:', this.selectedCamera);
     }
   }
 
@@ -83,10 +82,9 @@ export class ScanPageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
-        console.log(result);
+        this.router.navigate(['/coleta/minhas-coletas', this.balancoId]);
       }
       this.dialogOpen = false;
-      this.router.navigate(['/coleta/minhas-coletas', this.balancoId]);
     });
   }
 }
