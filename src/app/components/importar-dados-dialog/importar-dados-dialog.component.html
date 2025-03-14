@@ -5,9 +5,9 @@
     (click)="triggerFileInput()"
     (drop)="onDrop($event)"
     (dragover)="onDragOver($event)"
-    class="border-2 hover:cursor-pointer border-dashed border-secondary rounded-md p-4 flex items-center gap-4 bg-secondary/20 text-secondary"
+    class="border-2 hover:cursor-pointer border-dashed border-secondary rounded-md p-4 flex items-center flex-wrap gap-4 bg-secondary/20 text-secondary"
   >
-    <mat-icon>upload</mat-icon>
+    <mat-icon class="!m-auto">upload</mat-icon>
     <p class="text-lg font-medium">
       Arraste & solte ou clique para escolhar um arquivo
     </p>
