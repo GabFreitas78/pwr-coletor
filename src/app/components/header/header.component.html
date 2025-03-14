@@ -1,13 +1,16 @@
-<header class="bg-white shadow-md py-4 px-6 flex justify-between items-center z-20">
+<header class="bg-white shadow-md py-4 px-6 flex justify-between items-center z-20 h-20 sticky">
     @if (showBack()) {
-    <button mat-button routerLink="/" aria-label="Voltar" class="p-2">
+    <button mat-button (click)="goBack()" aria-label="Voltar" class="p-2">
         <span class="material-icons">arrow_back</span>
     </button>
     }
 
     @if (title()) {
-    <h1 class="text-xl font-medium">{{title()}}</h1>
+    <h1 class="text-xl font-medium mx-auto">{{title()}}</h1>
     }
 
-    <div class="w-8"></div>
+    <!-- Espaço para botões personalizados -->
+    <div class="flex gap-2">
+        <ng-content></ng-content>
+    </div>
 </header>

@@ -1,15 +1,19 @@
-import { Component, input } from '@angular/core';
-import { MatButton } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { Component, inject, input } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, MatButton],
+  imports: [MatIconModule, MatButtonModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  showBack = input<boolean>();
+  readonly showBack = input<boolean>(false);
+  readonly title = input<string>();
+  readonly location = inject(Location);
 
-  title = input<string>();
+  goBack() {
+    this.location.back(); // Use the location.back() method
+  }
 }

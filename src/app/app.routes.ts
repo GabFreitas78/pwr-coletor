@@ -1,19 +1,24 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { ColetaComponent } from './pages/coleta/coleta.component';
-import { ConferenciasComponent } from './pages/conferencias/conferencias.component';
+import { BalancoPageComponent } from './pages/balanco-page/balanco-page.component';
+import { HomePageComponent } from './pages/home-page/home-page.component';
+import { ScanPageComponent } from './pages/scan-page/scan-page.component';
 
 export const routes: Routes = [
     {
         path: '',
-        component: HomeComponent
+        component: HomePageComponent
     },
     {
-        path: 'coletar',
-        component: ColetaComponent
-    },
-    {
-        path: 'conferencias',
-        component: ConferenciasComponent
+        path: 'coleta',
+        children: [
+            {
+                path: 'balanco',
+                component: BalancoPageComponent
+            },
+            {
+                path: 'scan/:id',
+                component: ScanPageComponent
+            }
+        ]
     },
 ];
