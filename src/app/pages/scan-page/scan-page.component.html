@@ -2,7 +2,7 @@
   <!-- Scanner -->
   <zxing-scanner
     (torchCompatible)="flashlightCompativel = $event"
-    class="!flex m-auto max-h-screen w-full"
+    class="!flex max-h-screen w-full fixed top-1/2 -translate-y-1/2"
     [torch]="flashlightStatus"
     [formats]="allowedFormats"
     (camerasFound)="handleCamerasFound($event)"
