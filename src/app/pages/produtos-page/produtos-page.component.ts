@@ -87,7 +87,7 @@ export class ProdutosPageComponent {
   filtrarProdutos(termo: string) {
     const busca = termo.toLowerCase().trim();
     this.produtosFiltrados = this.produtos.filter(
-      (p) => p.nome.toLowerCase().includes(busca) || p.codigo.includes(busca)
+      (p) => p.nome?.toLowerCase().includes(busca) || p.codigo.includes(busca)
     );
     this.pageIndex = 0; // Resetar para primeira página ao filtrar
     this.atualizarPaginacao();

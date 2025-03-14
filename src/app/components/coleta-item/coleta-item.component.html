@@ -1,4 +1,8 @@
-<div class="flex items-center justify-between p-6">
+<div
+  class="hover:bg-blue-100 transition-bg duration-200 flex items-center justify-between p-6 hover:cursor-pointer"
+  matRipple
+  (click)="handleEdit()"
+>
   <div class="flex flex-col justify-between items-start">
     <p class="text-lg font-medium">{{ codigo() }}</p>
     <p class="text-md text-gray-500">{{ nome() }}</p>
@@ -6,9 +10,6 @@
 
   @if(balancoId()) {
   <div class="text-xl flex items-center justify-start gap-1">
-    <button mat-icon-button class="!leading-none" (click)="handleEdit()">
-      <mat-icon>edit</mat-icon>
-    </button>
     <div class="flex gap-1 items-end leading-none">
       <input
         #inputQtd
@@ -19,7 +20,7 @@
         (keydown)="handleKeydown($event)"
         (blur)="handleBlur()"
         [(ngModel)]="quantidade"
-        class="!text-end !w-15 !font-semibold"
+        class="!text-end !font-semibold"
       />
       <span class="text-sm text-gray-500 w-5">{{ unidade() }}</span>
     </div>

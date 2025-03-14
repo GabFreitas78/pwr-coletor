@@ -1,4 +1,7 @@
-<div class="relative w-screen h-screen flex bg-black">
+<div
+  class="relative w-screen h-screen flex bg-black"
+  (click)="handleScanCodigo('52512')"
+>
   <!-- Scanner -->
   <zxing-scanner
     (torchCompatible)="flashlightCompativel = $event"

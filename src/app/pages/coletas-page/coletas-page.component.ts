@@ -71,6 +71,7 @@ export class ColetasPageComponent implements OnInit, OnDestroy {
 
     this.produtosFiltrados = [...this.produtos]; // Inicializa os filtrados
     this.atualizarPaginacao(); // Define os produtos da primeira página
+    console.log(this.produtosPaginados);
 
     this.searchSubject
       .pipe(
@@ -103,7 +104,7 @@ export class ColetasPageComponent implements OnInit, OnDestroy {
   filtrarProdutos(termo: string) {
     const busca = termo.toLowerCase().trim();
     this.produtosFiltrados = this.produtos.filter(
-      (p) => p.nome.toLowerCase().includes(busca) || p.codigo.includes(busca)
+      (p) => p.nome?.toLowerCase().includes(busca) || p.codigo.includes(busca)
     );
     this.pageIndex = 0; // Resetar para primeira página ao filtrar
     this.atualizarPaginacao();

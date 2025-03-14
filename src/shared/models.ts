@@ -1,7 +1,7 @@
 export interface Produto {
   id: string;
-  nome: string;
-  unidade: string;
+  nome?: string;
+  unidade?: string;
   codigo: string;
 }
 

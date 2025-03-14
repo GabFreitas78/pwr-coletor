@@ -13,8 +13,6 @@ export function lerCSVDoLocalStorage(): Produto[] {
     header: true, // Garante que o cabeçalho seja reconhecido corretamente
   });
 
-  console.log(resultado);
-
   if (resultado.errors.length > 0) {
     console.error('Erro ao processar CSV:', resultado.errors);
     throw new Error('Formato inválido dos dados importados');
@@ -22,8 +20,8 @@ export function lerCSVDoLocalStorage(): Produto[] {
 
   return resultado.data.map((item, index) => ({
     id: item.id || index.toString(),
-    nome: item.nome.trim(),
-    unidade: item.unidade.trim(),
+    nome: item.nome?.trim(),
+    unidade: item.unidade?.trim(),
     codigo: item.codigo.trim(),
   }));
 }
@@ -57,26 +55,42 @@ export function patchProduto(
   balancoId: string
 ) {
   const balancos = lerBalancosDoLocalStorage();
-  const balanco = balancos.find((b) => b.id === Number(balancoId));
+  const balancoIndex = balancos.findIndex((b) => b.id === Number(balancoId));
 
-  if (!balanco) {
+  if (balancoIndex === -1) {
     throw new Error(`Balanço com o id ${balancoId} não existe`);
   }
 
-  const produto = lerCSVDoLocalStorage().find((p) => p.codigo === codigo);
+  const produtos = lerCSVDoLocalStorage();
+  let produtoIndex = produtos.findIndex((p) => p.codigo === codigo);
+  const balanco = balancos[balancoIndex];
 
-  if (!produto) {
-    throw new Error(`Produto com o código ${codigo} não existe`);
-  }
-
-  const balancoProduto = balanco.produtos.find((p) => p.id === produto.id);
-
-  if (balancoProduto) {
-    balancoProduto.quantidade = quantidade;
+  if (produtoIndex === -1) {
+    // produto não tinha nos dados
+    console.log(
+      `Produto com o código ${codigo} não existe. Criando um novo para o balanço...`
+    );
+    const newProduto = {
+      codigo,
+      id: crypto.randomUUID(),
+    };
+    produtos.push(newProduto);
+    localStorage.setItem('csvData', Papa.unparse(produtos)); // atualiza os produtos
+    balanco.produtos.push({ id: newProduto.id, quantidade });
   } else {
-    console.log(`Criando novo produto no balanço ${balancoId}`);
-    balanco.produtos.push({ id: produto.id, quantidade });
+    // produto já pertencia aos dados importados
+    const produto = produtos[produtoIndex];
+    const balancoProdutoIndex = balanco.produtos.findIndex(
+      (p) => p.id === produto.id
+    );
+    if (balancoProdutoIndex === -1) {
+      // Não existe esse produto para esse balanço ainda
+      balanco.produtos.push({ id: produto.id, quantidade });
+    } else {
+      balanco.produtos[balancoProdutoIndex].quantidade = quantidade;
+    }
   }
+  balancos[balancoIndex] = balanco;
 
   localStorage.setItem('balancos', JSON.stringify(balancos));
   console.log(`Quantidade do produto ${codigo} atualizada para ${quantidade}`);
