@@ -67,6 +67,7 @@ export class ScanPageComponent implements OnInit {
       console.log('Sem câmeras para o scan');
     } else {
       this.scannerAtivado = true;
+      this.selectedCamera = camerasFound[this.cameraAtualIndex];
       if (qtdCameras === 2) {
         this.alternarCameraDisponivel = true;
       } else {

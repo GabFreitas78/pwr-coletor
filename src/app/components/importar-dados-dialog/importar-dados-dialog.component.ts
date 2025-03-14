@@ -80,10 +80,10 @@ export class ImportarDadosDialogComponent {
     const fileContent = await this.readFileContent(this.selectedFile()!);
     localStorage.setItem('csvData', fileContent);
     if (this.checarFormatoDados()) {
-      this.dialogRef.close();
       this._snackBar.open('Dados importados com sucesso', undefined, {
         duration: 2000,
       });
+      this.dialogRef.close();
     } else {
       localStorage.removeItem('csvData');
       this._snackBar.open('Formato inválido dos dados importados', undefined, {

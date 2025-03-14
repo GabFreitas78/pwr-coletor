@@ -6,7 +6,7 @@
     [torch]="flashlightStatus"
     [formats]="allowedFormats"
     (camerasFound)="handleCamerasFound($event)"
-    [(device)]="selectedCamera"
+    [device]="selectedCamera"
     (scanSuccess)="handleScanCodigo($event)"
     (scanError)="handleScanError($event)"
     [delayBetweenScanSuccess]="15000"
