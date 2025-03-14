@@ -11,34 +11,36 @@ export function lerCSVDoLocalStorage(): Produto[] {
   const resultado = Papa.parse(csvData, {
     header: true, // Converte colunas em chaves do objeto
     skipEmptyLines: true, // Remove linhas vazias
-    transformHeader: (header, index) => header.toLowerCase(),
+    // transformHeader: (header, index) => header.toLowerCase(),
   });
 
   // Mapeando os dados para a interface Produto
   return resultado.data.map((item: any) => ({
-    id: Number(item.id),
+    id: item.id || '',
     nome: item.descricao || item.nome || item.name || item.desc || '',
-    quantidade: Number(item.quantidade) || item.qtd || item.estoque || 0,
     unidade: item.unidade || item.und || 'und',
     codigo: item.codigo || item.cod || '',
   }));
 }
 
 export function lerBalancosDoLocalStorage(): Balanco[] {
-  const balancos = localStorage.getItem('balancos');
-  if (!balancos) {
+  const balancosStr = localStorage.getItem('balancos');
+  if (!balancosStr) {
     console.log('Sem Balancos salvos');
     return [];
   }
 
-  const resultado = JSON.parse(balancos);
+  const balancos = JSON.parse(balancosStr);
 
   // Mapeando os dados para a interface Produto
-  return resultado.map((item: any) => ({
+  return balancos.map((item: any) => ({
     id: Number(item.id),
     nome: item.nome,
     dataCriacao: new Date(item.dataCriacao),
-    produtosIds: item.produtosIds,
+    produtos: item.produtos.map((item: any) => ({
+      id: item.id,
+      quantidade: Number(item.quantidade),
+    })),
   }));
 }
 
@@ -55,25 +57,35 @@ export function patchProduto(
     console.warn(`Balanço com o id ${balancoId} não existe`);
     return;
   }
-  const balanco = balancos[balancoIndex];
-  const produtos = lerCSVDoLocalStorage().filter((produto) =>
-    balanco.produtosIds.includes(produto.id.toString())
-  );
-  let produtoIndex = produtos.findIndex((p) => p.codigo === codigo);
 
-  if (produtoIndex === -1) {
-    console.log(
-      `Produto com o código ${codigo} não encontrado. Criando um novo`
-    );
-    balanco.produtosIds.push(codigo);
-    produtoIndex = produtos.length - 1;
+  const balanco = balancos[balancoIndex];
+
+  const produto = lerCSVDoLocalStorage().find(
+    (produto) => produto.codigo === codigo
+  );
+
+  if (!produto) {
+    console.warn(`Produto com o código ${codigo} não existe`);
+    return;
   }
 
-  // ARRUMAR ISSO!
+  let balancoProduto = balanco.produtos.find((p) => p.id === produto.id);
 
-  // Atualiza a quantidade do produto no balanço
-  produtos[produtoIndex].quantidade = quantidade;
-  balanco.produtosIds = produtos.map((produto) => produto.id.toString());
+  if (balancoProduto === undefined) {
+    // balanco não possui o produto ainda, mas o produto existe
+    console.log(
+      `O balanco de id ${balancoId} ainda não possui o produto de id ${produto.id}. Criando novo...`
+    );
+
+    balancoProduto = {
+      id: produto.id,
+      quantidade,
+    };
+  } else {
+    balancoProduto.quantidade = quantidade;
+  }
+
+  balanco.produtos.push(balancoProduto);
   balancos[balancoIndex] = balanco;
 
   // Salva os balancos atualizados no localStorage
@@ -82,12 +94,29 @@ export function patchProduto(
   console.log(`Quantidade do produto ${codigo} atualizada para ${quantidade}`);
 }
 
-export function getQtdProduto(codigo: string): number {
+export function getQtdProduto(codigo: string, balancoId: string): number {
   const produtos = lerCSVDoLocalStorage();
-  const produto = produtos.find((p) => p.codigo === codigo);
+  const produtoId = produtos.find((p) => p.codigo === codigo)?.id;
+
+  if (!produtoId) {
+    console.warn(`Produto com código ${codigo} não encontrado.`);
+    return 0;
+  }
+  const balanco = lerBalancosDoLocalStorage().find(
+    (balanco) => balanco.id === Number(balancoId)
+  );
+
+  if (!balanco) {
+    console.warn(`Balanco com o id ${balancoId} não encontrado.`);
+    return 0;
+  }
+
+  const produto = balanco.produtos.find((produto) => produto.id === produtoId);
 
   if (!produto) {
-    console.warn(`Produto com código ${codigo} não encontrado.`);
+    console.warn(
+      `O produto de código ${codigo} não pertence ao balanco de id ${balancoId}`
+    );
     return 0;
   }
 
@@ -100,9 +129,8 @@ export function salvarNovoBalanco(nome: string) {
     dataCriacao: new Date(),
     id: balancos.length,
     nome: nome,
-    produtosIds: [],
+    produtos: [],
   };
-
   balancos.push(novoBalanco);
 
   localStorage.setItem('balancos', JSON.stringify(balancos));

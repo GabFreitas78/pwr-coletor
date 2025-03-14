@@ -9,9 +9,12 @@
     [torch]="flashlightStatus"
     [formats]="allowedFormats"
     (camerasFound)="handleCamerasFound($event)"
-    [device]="selectedCamera"
+    [(device)]="selectedCamera"
     (scanSuccess)="handleScanCodigo($event)"
+    (scanError)="handleScanError($event)"
     [delayBetweenScanSuccess]="15000"
+    [enable]="!scannerComErro()"
+    [autostart]="false"
   ></zxing-scanner>
 
   <!-- Máscara escura ao redor do scanner (agora com um buraco quadrado fixo) -->

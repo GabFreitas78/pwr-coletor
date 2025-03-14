@@ -5,6 +5,7 @@ import {
   inject,
   model,
   OnInit,
+  signal,
   viewChild,
 } from '@angular/core';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
@@ -49,6 +50,7 @@ export class ScanPageComponent implements OnInit {
   selectedCamera?: MediaDeviceInfo;
   alternarCameraDisponivel?: boolean;
   cameraAtualIndex?: number;
+  scannerComErro = signal<boolean>(false);
 
   ngOnInit(): void {
     this.balancoId = this.route.snapshot.paramMap.get('balancoId')!;
@@ -56,12 +58,22 @@ export class ScanPageComponent implements OnInit {
 
   handleCamerasFound(camerasFound: MediaDeviceInfo[]) {
     this.camerasFound = camerasFound;
-    if (camerasFound.length !== 2) {
+    if (camerasFound.length === 0) {
+      this.alternarCameraDisponivel = false;
+      this.scannerComErro.set(true);
+      console.log('Sem câmeras para scan');
+    } else if (camerasFound.length !== 2) {
       this.alternarCameraDisponivel = false;
     } else {
       this.alternarCameraDisponivel = true;
       this.cameraAtualIndex = 0;
-      this.selectedCamera = camerasFound[this.cameraAtualIndex];
+      this.updateSelectedCamera(camerasFound[this.cameraAtualIndex]);
+    }
+  }
+
+  updateSelectedCamera(newSelectedCamera: MediaDeviceInfo) {
+    if (newSelectedCamera.deviceId !== this.selectedCamera?.deviceId) {
+      this.selectedCamera = newSelectedCamera;
     }
   }
 
@@ -70,21 +82,25 @@ export class ScanPageComponent implements OnInit {
     if (this.alternarCameraDisponivel && this.cameraAtualIndex !== undefined) {
       this.cameraAtualIndex =
         (this.cameraAtualIndex + 1) % this.camerasFound.length;
-      this.selectedCamera = this.camerasFound[this.cameraAtualIndex];
+      this.updateSelectedCamera(this.camerasFound[this.cameraAtualIndex]);
     }
+  }
+
+  handleScanError(error: Error) {
+    console.log('Erro com o scanner: ', error);
+    this.scannerComErro.set(true);
   }
 
   handleScanCodigo(codigo: string) {
     if (this.dialogOpen) return;
     const dialogRef = this.dialog.open(QuantidadeDialog, {
-      data: <QuantidadeDialogData>{ codigo },
+      data: <QuantidadeDialogData>{ codigo, balancoId: this.balancoId },
     });
     this.dialogOpen = true;
 
     dialogRef.afterClosed().subscribe((nova_quantidade: number) => {
       if (nova_quantidade !== undefined) {
-        if (nova_quantidade)
-          patchProduto(codigo, nova_quantidade, this.balancoId);
+        patchProduto(codigo, nova_quantidade, this.balancoId);
         this.router.navigate(['/coleta/minhas-coletas', this.balancoId]);
       }
       this.dialogOpen = false;
@@ -94,6 +110,7 @@ export class ScanPageComponent implements OnInit {
 
 interface QuantidadeDialogData {
   codigo: string;
+  balancoId: string;
 }
 
 @Component({
@@ -134,7 +151,9 @@ interface QuantidadeDialogData {
 class QuantidadeDialog implements OnInit {
   readonly dialogRef = inject(MatDialogRef<QuantidadeDialog>);
   readonly data = inject<QuantidadeDialogData>(MAT_DIALOG_DATA);
-  readonly quantidade = model<number>(getQtdProduto(this.data.codigo));
+  readonly quantidade = model<number>(
+    getQtdProduto(this.data.codigo, this.data.balancoId)
+  );
   readonly inputQtdRef =
     viewChild.required<ElementRef<HTMLInputElement>>('inputQtd');
 

@@ -56,20 +56,21 @@ export class ColetasPageComponent implements OnInit, OnDestroy {
   pageIndex = 0; // Página atual
 
   ngOnInit(): void {
-    this.produtosFiltrados = [...this.produtos]; // Inicializa os filtrados
-    this.atualizarPaginacao(); // Define os produtos da primeira página
     this.balancoId = this.route.snapshot.paramMap.get('balancoId')!;
-    const produtosIds = lerBalancosDoLocalStorage().find(
+    const balanco = lerBalancosDoLocalStorage().find(
       (balanco) => balanco.id === Number(this.balancoId)
-    )?.produtosIds;
+    );
 
-    if (produtosIds) {
+    if (balanco) {
       this.produtos = lerCSVDoLocalStorage().filter((produto) =>
-        produtosIds.includes(produto.id.toString())
+        balanco.produtos.map((produto) => produto.id).includes(produto.id)
       );
     } else {
       this.produtos = [];
     }
+
+    this.produtosFiltrados = [...this.produtos]; // Inicializa os filtrados
+    this.atualizarPaginacao(); // Define os produtos da primeira página
 
     this.searchSubject
       .pipe(

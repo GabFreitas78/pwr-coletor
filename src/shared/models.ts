@@ -1,7 +1,6 @@
 export interface Produto {
-  id: number;
+  id: string;
   nome: string;
-  quantidade: number;
   unidade: string;
   codigo: string;
 }
@@ -10,5 +9,8 @@ export interface Balanco {
   id: number;
   nome: string;
   dataCriacao: Date;
-  produtosIds: string[];
+  produtos: {
+    id: string;
+    quantidade: number;
+  }[];
 }
