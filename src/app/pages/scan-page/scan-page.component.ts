@@ -1,4 +1,12 @@
-import { Component, inject, input, model, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  model,
+  OnInit,
+  viewChild,
+} from '@angular/core';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { BarcodeFormat } from '@zxing/library';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-scan-page',
   imports: [ZXingScannerModule, MatButtonModule, MatIconModule],
   templateUrl: './scan-page.component.html',
+  styleUrl: './scan-page.component.css',
 })
 export class ScanPageComponent implements OnInit {
   readonly allowedFormats: BarcodeFormat[] = [
@@ -34,6 +43,7 @@ export class ScanPageComponent implements OnInit {
 
   flashlightCompativel?: boolean;
   flashlightStatus = false;
+  dialogOpen = false;
   camerasFound: MediaDeviceInfo[] = [];
   selectedCamera?: MediaDeviceInfo;
   alternarCameraDisponivel?: boolean;
@@ -65,14 +75,17 @@ export class ScanPageComponent implements OnInit {
   }
 
   handleScanCodigo(codigo: string) {
+    if (this.dialogOpen) return;
     const dialogRef = this.dialog.open(QuantidadeDialog, {
       data: <QuantidadeDialogData>{ codigo, quantidadeAnterior: 0 },
     });
+    this.dialogOpen = true;
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== undefined) {
         console.log(result);
       }
+      this.dialogOpen = false;
       this.router.navigate(['/coleta/minhas-coletas', this.balancoId]);
     });
   }
@@ -96,7 +109,13 @@ interface QuantidadeDialogData {
       <p class="mb-2">Código lido: {{ data.codigo }}</p>
       <mat-form-field appearance="fill" class="w-full">
         <mat-label>Quantidade</mat-label>
-        <input matInput [(ngModel)]="quantidade" type="number" [min]="0" />
+        <input
+          #inputQtd
+          matInput
+          [(ngModel)]="quantidade"
+          type="number"
+          [min]="0"
+        />
       </mat-form-field>
     </mat-dialog-content>
 
@@ -104,7 +123,6 @@ interface QuantidadeDialogData {
       <button mat-button (click)="fechar()">Cancelar</button>
       <button
         mat-button
-        cdkFocusInitial
         color="primary"
         [mat-dialog-close]="quantidade()"
         [disabled]="quantidade() === 0"
@@ -113,10 +131,19 @@ interface QuantidadeDialogData {
       </button>
     </mat-dialog-actions>`,
 })
-class QuantidadeDialog {
+class QuantidadeDialog implements OnInit {
   readonly dialogRef = inject(MatDialogRef<QuantidadeDialog>);
   readonly data = inject<QuantidadeDialogData>(MAT_DIALOG_DATA);
   readonly quantidade = model<number>(this.data.quantidadeAnterior);
+  readonly inputQtdRef =
+    viewChild.required<ElementRef<HTMLInputElement>>('inputQtd');
+
+  ngOnInit(): void {
+    this.dialogRef.afterOpened().subscribe(() => {
+      this.inputQtdRef().nativeElement.focus();
+      this.inputQtdRef().nativeElement.select();
+    });
+  }
 
   fechar(): void {
     this.dialogRef.close();

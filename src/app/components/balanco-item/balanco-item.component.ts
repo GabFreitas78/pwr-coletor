@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-balanco-item',
   imports: [DatePipe, MatButtonModule],
-  templateUrl: './balanco-item.component.html'
+  templateUrl: './balanco-item.component.html',
 })
 export class BalancoItemComponent {
   readonly id = input.required<number>();
@@ -15,9 +15,8 @@ export class BalancoItemComponent {
   readonly quantidadeProdutos = input.required<number>();
 
   readonly router = inject(Router);
-  readonly route = inject(ActivatedRoute);
 
   escolherBalanco() {
-    this.router.navigate(['../scan', this.id()], { relativeTo: this.route });
+    this.router.navigate(['/coleta/scan', this.id()]);
   }
 }

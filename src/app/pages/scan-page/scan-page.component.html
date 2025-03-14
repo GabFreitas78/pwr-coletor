@@ -1,7 +1,7 @@
-<div class="relative object-contain w-screen h-screen flex bg-black">
-  <!-- Fundo escuro para áreas sem vídeo -->
-  <div class="absolute inset-0 !bg-black !z-[-1]"></div>
-
+<div
+  class="relative w-screen h-screen flex bg-black"
+  (click)="handleScanCodigo('123')"
+>
   <!-- Scanner -->
   <zxing-scanner
     (torchCompatible)="flashlightCompativel = $event"
@@ -11,31 +11,43 @@
     (camerasFound)="handleCamerasFound($event)"
     [device]="selectedCamera"
     (scanSuccess)="handleScanCodigo($event)"
-    [delayBetweenScanSuccess]="10000"
-  />
+    [delayBetweenScanSuccess]="15000"
+  ></zxing-scanner>
 
+  <!-- Máscara escura ao redor do scanner (agora com um buraco quadrado fixo) -->
+  <div class="fixed inset-0 mask-overlay pointer-events-none"></div>
+
+  <!-- Quadrado fixo no centro com a listra animada -->
   <div
-    class="flex items-center gap-16 absolute bottom-10 left-1/2 -translate-x-1/2"
+    class="fixed w-[250px] h-[250px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
   >
-    <!-- Botão da Lanterna -->
+    <!-- Linha vermelha animada -->
+    <div
+      class="absolute top-0 left-0 w-full h-[2px] bg-red-500 animate-scan"
+    ></div>
+  </div>
+
+  <!-- Botões Fixos na Tela -->
+  <div
+    class="fixed bottom-[10vh] left-1/2 -translate-x-1/2 flex items-center gap-10"
+  >
     @if (flashlightCompativel) {
     <button
       (click)="flashlightStatus = !flashlightStatus"
       mat-icon-button
       aria-label="Lanterna"
-      class="!w-20 !bg-secondary !text-white !h-20 !flex !items-center !justify-center"
+      class="!w-16 !h-16 !bg-secondary !text-white !flex !items-center !justify-center"
     >
       <mat-icon>{{
         flashlightStatus ? "flashlight_on" : "flashlight_off"
       }}</mat-icon>
     </button>
-    } @if(alternarCameraDisponivel) {
-    <!-- Botão para alternar câmera -->
+    } @if (alternarCameraDisponivel) {
     <button
       (click)="alternarCamera()"
       mat-icon-button
       aria-label="Alternar Câmera"
-      class="!w-20 !bg-secondary !text-white !h-20 !flex !items-center !justify-center"
+      class="!w-16 !h-16 !bg-secondary !text-white !flex !items-center !justify-center"
     >
       <mat-icon>flip_camera_android</mat-icon>
     </button>

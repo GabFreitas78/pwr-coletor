@@ -1,0 +1,59 @@
+@keyframes scan {
+  0% {
+    top: 0;
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0.2;
+  }
+}
+
+.animate-scan {
+  animation: scan 2s infinite linear;
+}
+
+/* Máscara escura ao redor do quadrado fixo */
+.mask-overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  -webkit-mask-image: linear-gradient(
+      black calc(50% - 125px),
+      black calc(50% - 125px),
+      transparent calc(50% - 125px),
+      transparent calc(50% + 125px),
+      black calc(50% + 125px),
+      black 100%
+    ),
+    linear-gradient(
+      to right,
+      black calc(50% - 125px),
+      black calc(50% - 125px),
+      transparent calc(50% - 125px),
+      transparent calc(50% + 125px),
+      black calc(50% + 125px),
+      black 100%
+    );
+  mask-image: linear-gradient(
+      black calc(50% - 125px),
+      black calc(50% - 125px),
+      transparent calc(50% - 125px),
+      transparent calc(50% + 125px),
+      black calc(50% + 125px),
+      black 100%
+    ),
+    linear-gradient(
+      to right,
+      black calc(50% - 125px),
+      black calc(50% - 125px),
+      transparent calc(50% - 125px),
+      transparent calc(50% + 125px),
+      black calc(50% + 125px),
+      black 100%
+    );
+}
