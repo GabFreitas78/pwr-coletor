@@ -4,17 +4,9 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { patchProduto } from '../../../shared/utils';
 import { FormsModule } from '@angular/forms';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-
 @Component({
   selector: 'app-coleta-item',
-  imports: [
-    MatInputModule,
-    MatButtonModule,
-    MatIcon,
-    FormsModule,
-    NgxSkeletonLoaderModule,
-  ],
+  imports: [MatInputModule, MatButtonModule, MatIcon, FormsModule],
   templateUrl: './coleta-item.component.html',
 })
 export class ColetaItemComponent {

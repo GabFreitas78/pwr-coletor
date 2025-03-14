@@ -1,4 +1,3 @@
-@defer (on viewport) {
 <div class="flex items-center justify-between p-6">
   <div class="flex flex-col justify-between items-start">
     <p class="text-lg font-medium">{{ codigo() }}</p>
@@ -25,41 +24,3 @@
     </div>
   </div>
 </div>
-
-} @placeholder {
-<div class="flex items-center justify-between p-6">
-  <div class="flex flex-col justify-between items-start">
-    <!-- Skeleton para código -->
-    <ngx-skeleton-loader
-      class="w-24 h-6 mb-2"
-      borderRadius="4px"
-    ></ngx-skeleton-loader>
-    <!-- Skeleton para nome -->
-    <ngx-skeleton-loader
-      class="w-40 h-4"
-      borderRadius="4px"
-    ></ngx-skeleton-loader>
-  </div>
-
-  <div class="text-xl flex items-center justify-start gap-1">
-    <!-- Skeleton para botão de editar -->
-    <ngx-skeleton-loader
-      class="w-10 h-10"
-      borderRadius="50%"
-    ></ngx-skeleton-loader>
-
-    <div class="flex gap-1 items-end leading-none">
-      <!-- Skeleton para input de quantidade -->
-      <ngx-skeleton-loader
-        class="w-16 h-8"
-        borderRadius="4px"
-      ></ngx-skeleton-loader>
-      <!-- Skeleton para unidade -->
-      <ngx-skeleton-loader
-        class="w-5 h-4"
-        borderRadius="4px"
-      ></ngx-skeleton-loader>
-    </div>
-  </div>
-</div>
-}
