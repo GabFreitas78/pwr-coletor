@@ -18,7 +18,7 @@
     </div>
 
     <mat-list class="!p-0">
-      @for(produto of produtosFiltrados; track produto.id) { @defer (on
+      @for(produto of produtosPaginados; track produto.id) { @defer (on
       viewport) {
       <mat-list-item class="!h-auto !p-0">
         <app-coleta-item
@@ -68,6 +68,15 @@
       </div>
       } }
     </mat-list>
+
+    <!-- Paginação -->
+    <mat-paginator
+      [length]="produtosFiltrados.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="mudarPagina($event)"
+      showFirstLastButtons
+    ></mat-paginator>
 
     <div
       class="flex m-auto flex-col items-center justify-center gap-10 max-w-200 w-[80%]"
