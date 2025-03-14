@@ -48,7 +48,6 @@ export class ScanPageComponent implements OnInit {
   flashlightCompativel?: boolean;
   cameraAtualIndex = 0;
   flashlightStatus = false;
-  scannerAtivado?: boolean;
   dialogOpen = false;
   camerasFound: MediaDeviceInfo[] = [];
   selectedCamera?: MediaDeviceInfo;
@@ -63,10 +62,8 @@ export class ScanPageComponent implements OnInit {
     const qtdCameras = this.camerasFound.length;
 
     if (qtdCameras === 0) {
-      this.scannerAtivado = false;
       console.log('Sem câmeras para o scan');
     } else {
-      this.scannerAtivado = true;
       this.selectedCamera = camerasFound[this.cameraAtualIndex];
       if (qtdCameras === 2) {
         this.alternarCameraDisponivel = true;
@@ -78,7 +75,7 @@ export class ScanPageComponent implements OnInit {
 
   // Alternar entre câmeras (frontal/traseira)
   alternarCamera() {
-    if (this.alternarCameraDisponivel && this.cameraAtualIndex !== undefined) {
+    if (this.alternarCameraDisponivel) {
       this.cameraAtualIndex =
         (this.cameraAtualIndex + 1) % this.camerasFound.length;
       this.selectedCamera = this.camerasFound[this.cameraAtualIndex];
@@ -87,7 +84,6 @@ export class ScanPageComponent implements OnInit {
 
   handleScanError(error: Error) {
     console.log('Erro com o scanner: ', error);
-    this.scannerAtivado = false;
   }
 
   handleScanCodigo(codigo: string) {
