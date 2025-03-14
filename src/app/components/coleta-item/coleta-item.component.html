@@ -1,0 +1,25 @@
+<div class="flex items-center justify-between p-6">
+  <div class="flex flex-col justify-between items-start">
+    <p class="text-lg font-medium">{{ codigo() }}</p>
+    <p class="text-md text-gray-500">{{ nome() }}</p>
+  </div>
+
+  <div class="text-xl flex items-center w-40 justify-start gap-1">
+    <button mat-icon-button class="!leading-none" (click)="handleEdit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <div class="flex gap-1 items-end leading-none">
+      <input
+        #inputQtd
+        [readonly]="!editandoQuantidade"
+        matInput
+        type="number"
+        [min]="0"
+        (blur)="editandoQuantidade = false"
+        [value]="quantidade()"
+        class="!text-end !w-15 !font-semibold"
+      />
+      <span class="text-sm text-gray-500">{{ unidade() }}</span>
+    </div>
+  </div>
+</div>

@@ -1,22 +1,44 @@
-<div class="relative object-contain w-screen h-screen flex">
+<div class="relative object-contain w-screen h-screen flex bg-black">
+  <!-- Fundo escuro para áreas sem vídeo -->
+  <div class="absolute inset-0 !bg-black !z-[-1]"></div>
+
+  <!-- Scanner -->
   <zxing-scanner
     (torchCompatible)="flashlightCompativel = $event"
-    class="!flex m-auto max-h-screen"
+    class="!flex m-auto max-h-screen w-full"
     [torch]="flashlightStatus"
     [formats]="allowedFormats"
-    (camerasFound)="camerasFound = $event"
+    (camerasFound)="handleCamerasFound($event)"
+    [device]="selectedCamera"
     (scanSuccess)="handleScanCodigo($event)"
+    [delayBetweenScanSuccess]="10000"
   />
-  @if (flashlightCompativel) {
-  <button
-    (click)="flashlightStatus = !flashlightStatus"
-    mat-icon-button
-    aria-label="Lanterna"
-    class="!w-20 !bg-secondary !text-white !h-20 !absolute !bottom-10 !left-1/2 !-translate-x-1/2 !flex !items-center !justify-center"
+
+  <div
+    class="flex items-center gap-16 absolute bottom-10 left-1/2 -translate-x-1/2"
   >
-    <mat-icon>{{
-      flashlightStatus ? "flashlight_on" : "flashlight_off"
-    }}</mat-icon>
-  </button>
-  }
+    <!-- Botão da Lanterna -->
+    @if (flashlightCompativel) {
+    <button
+      (click)="flashlightStatus = !flashlightStatus"
+      mat-icon-button
+      aria-label="Lanterna"
+      class="!w-20 !bg-secondary !text-white !h-20 !flex !items-center !justify-center"
+    >
+      <mat-icon>{{
+        flashlightStatus ? "flashlight_on" : "flashlight_off"
+      }}</mat-icon>
+    </button>
+    } @if(alternarCameraDisponivel) {
+    <!-- Botão para alternar câmera -->
+    <button
+      (click)="alternarCamera()"
+      mat-icon-button
+      aria-label="Alternar Câmera"
+      class="!w-20 !bg-secondary !text-white !h-20 !flex !items-center !justify-center"
+    >
+      <mat-icon>flip_camera_android</mat-icon>
+    </button>
+    }
+  </div>
 </div>
