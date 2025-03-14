@@ -1,10 +1,10 @@
 <div class="flex justify-between p-4 bg-gray-200">
     <div class="flex flex-col items-start justify-between">
-        <h3 class="text-lg font-semibold text-primary font-lato">{{ nome() }}</h3>
-        <p class="text-sm text-gray-500 font-lato">Criado em: {{ dataCriacao() | date:'dd/MM/yyyy' }}</p>
+        <h3 class="text-lg font-semibold text-primary">{{ nome() }}</h3>
+        <p class="text-sm text-gray-500">Criado em: {{ dataCriacao() | date:'dd/MM/yyyy' }}</p>
     </div>
     <div class="flex flex-col items-center gap-2">
-        <p class="text-sm text-gray-600 font-lato">{{ quantidadeProdutos() }} produtos</p>
-        <button mat-flat-button class="!font-lato" (click)="escolherBalanco()">Selecionar</button>
+        <p class="text-sm text-gray-600">{{ quantidadeProdutos() }} produtos</p>
+        <button mat-flat-button (click)="escolherBalanco()">Selecionar</button>
     </div>
 </div>
