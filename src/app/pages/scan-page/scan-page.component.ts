@@ -21,6 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, Router } from '@angular/router';
+import { getQtdProduto, patchProduto } from '../../../shared/utils';
 
 @Component({
   selector: 'app-scan-page',
@@ -76,12 +77,13 @@ export class ScanPageComponent implements OnInit {
   handleScanCodigo(codigo: string) {
     if (this.dialogOpen) return;
     const dialogRef = this.dialog.open(QuantidadeDialog, {
-      data: <QuantidadeDialogData>{ codigo, quantidadeAnterior: 0 },
+      data: <QuantidadeDialogData>{ codigo },
     });
     this.dialogOpen = true;
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result !== undefined) {
+    dialogRef.afterClosed().subscribe((nova_quantidade: number) => {
+      if (nova_quantidade !== undefined) {
+        if (nova_quantidade) patchProduto(codigo, nova_quantidade);
         this.router.navigate(['/coleta/minhas-coletas', this.balancoId]);
       }
       this.dialogOpen = false;
@@ -91,7 +93,6 @@ export class ScanPageComponent implements OnInit {
 
 interface QuantidadeDialogData {
   codigo: string;
-  quantidadeAnterior: number;
 }
 
 @Component({
@@ -132,7 +133,7 @@ interface QuantidadeDialogData {
 class QuantidadeDialog implements OnInit {
   readonly dialogRef = inject(MatDialogRef<QuantidadeDialog>);
   readonly data = inject<QuantidadeDialogData>(MAT_DIALOG_DATA);
-  readonly quantidade = model<number>(this.data.quantidadeAnterior);
+  readonly quantidade = model<number>(getQtdProduto(this.data.codigo));
   readonly inputQtdRef =
     viewChild.required<ElementRef<HTMLInputElement>>('inputQtd');
 

@@ -1,10 +1,11 @@
+@defer (on viewport) {
 <div class="flex items-center justify-between p-6">
   <div class="flex flex-col justify-between items-start">
     <p class="text-lg font-medium">{{ codigo() }}</p>
     <p class="text-md text-gray-500">{{ nome() }}</p>
   </div>
 
-  <div class="text-xl flex items-center w-40 justify-start gap-1">
+  <div class="text-xl flex items-center justify-start gap-1">
     <button mat-icon-button class="!leading-none" (click)="handleEdit()">
       <mat-icon>edit</mat-icon>
     </button>
@@ -15,11 +16,50 @@
         matInput
         type="number"
         [min]="0"
-        (blur)="editandoQuantidade = false"
-        [value]="quantidade()"
+        (keydown)="handleKeydown($event)"
+        (blur)="handleBlur()"
+        [(ngModel)]="quantidade"
         class="!text-end !w-15 !font-semibold"
       />
-      <span class="text-sm text-gray-500">{{ unidade() }}</span>
+      <span class="text-sm text-gray-500 w-5">{{ unidade() }}</span>
     </div>
   </div>
 </div>
+
+} @placeholder {
+<div class="flex items-center justify-between p-6">
+  <div class="flex flex-col justify-between items-start">
+    <!-- Skeleton para código -->
+    <ngx-skeleton-loader
+      class="w-24 h-6 mb-2"
+      borderRadius="4px"
+    ></ngx-skeleton-loader>
+    <!-- Skeleton para nome -->
+    <ngx-skeleton-loader
+      class="w-40 h-4"
+      borderRadius="4px"
+    ></ngx-skeleton-loader>
+  </div>
+
+  <div class="text-xl flex items-center justify-start gap-1">
+    <!-- Skeleton para botão de editar -->
+    <ngx-skeleton-loader
+      class="w-10 h-10"
+      borderRadius="50%"
+    ></ngx-skeleton-loader>
+
+    <div class="flex gap-1 items-end leading-none">
+      <!-- Skeleton para input de quantidade -->
+      <ngx-skeleton-loader
+        class="w-16 h-8"
+        borderRadius="4px"
+      ></ngx-skeleton-loader>
+      <!-- Skeleton para unidade -->
+      <ngx-skeleton-loader
+        class="w-5 h-4"
+        borderRadius="4px"
+      ></ngx-skeleton-loader>
+    </div>
+  </div>
+</div>
+}

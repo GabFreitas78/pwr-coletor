@@ -1,8 +1,24 @@
 <div class="flex flex-col min-h-screen">
   <app-header title="Minhas coletas" />
+
   <main class="flex-grow bg-background flex flex-col">
+    <!-- Barra de Pesquisa -->
+    <div class="p-4">
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Pesquisar produto</mat-label>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="filtro"
+          (input)="filtrarProdutos()"
+          placeholder="Digite o nome ou código do produto"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
     <mat-list class="!p-0">
-      @for(produto of produtos; track produto.id) {
+      @for(produto of produtosFiltrados; track produto.id) {
       <mat-list-item class="!h-auto !p-0">
         <app-coleta-item
           [nome]="produto.nome"
@@ -15,6 +31,7 @@
       <mat-divider />
       } }
     </mat-list>
+
     <div
       class="flex m-auto flex-col items-center justify-center gap-10 max-w-200 w-[80%]"
     >

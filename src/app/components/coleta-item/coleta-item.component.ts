@@ -2,10 +2,19 @@ import { Component, ElementRef, input, model, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { patchProduto } from '../../../shared/utils';
+import { FormsModule } from '@angular/forms';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-coleta-item',
-  imports: [MatInputModule, MatButtonModule, MatIcon],
+  imports: [
+    MatInputModule,
+    MatButtonModule,
+    MatIcon,
+    FormsModule,
+    NgxSkeletonLoaderModule,
+  ],
   templateUrl: './coleta-item.component.html',
 })
 export class ColetaItemComponent {
@@ -27,6 +36,22 @@ export class ColetaItemComponent {
     // Verifica se é um dispositivo mobile e simula um toque
     if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
       inputEl.click();
+    }
+  }
+
+  handleBlur() {
+    this.editandoQuantidade = false;
+    patchProduto(this.codigo(), this.quantidade());
+    this.inputQtdRef().nativeElement.blur();
+  }
+
+  handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      if (this.editandoQuantidade) {
+        this.handleBlur();
+      } else {
+        this.handleEdit();
+      }
     }
   }
 }

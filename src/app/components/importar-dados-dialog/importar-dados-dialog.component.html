@@ -1,0 +1,53 @@
+<h2 mat-dialog-title class="!font-sans">Importar dados</h2>
+<mat-dialog-content>
+  <div
+    matRipple
+    (click)="triggerFileInput()"
+    (drop)="onDrop($event)"
+    (dragover)="onDragOver($event)"
+    class="border-2 hover:cursor-pointer border-dashed border-secondary rounded-md p-4 flex items-center gap-4 bg-secondary/20 text-secondary"
+  >
+    <mat-icon>upload</mat-icon>
+    <p class="text-lg font-medium">
+      Arraste & solte ou clique para escolhar um arquivo
+    </p>
+    <input
+      class="hidden"
+      #fileInput
+      accept=".csv,.xlsx"
+      (change)="onFileSelected($event)"
+      type="file"
+    />
+  </div>
+  @if(selectedFilename()) {
+  <p class="mt-5 text-lg font-medium py-2">Arquivo selecionado:</p>
+  <div class="bg-background rounded-md p-4">
+    <div class="flex justify-around items-center">
+      <div class="text-lg font-medium">
+        {{ selectedFilename() }}
+        <span class="ml-2 text-sm font-medium text-gray-500">{{
+          fileSize()
+        }}</span>
+      </div>
+      <button mat-icon-button (click)="handleDeleteFile()">
+        <mat-icon class="!text-red-500">delete</mat-icon>
+      </button>
+    </div>
+  </div>
+  }@else {
+  <p class="mt-5 py-2 text-lg font-medium text-grey-700">
+    Nenhum arquivo selecionado
+  </p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions class="upload-actions">
+  <button mat-button (click)="fechar()">Cancelar</button>
+  <button
+    mat-button
+    color="primary"
+    (click)="importarDados()"
+    [disabled]="!selectedFilename()"
+  >
+    Importar
+  </button>
+</mat-dialog-actions>

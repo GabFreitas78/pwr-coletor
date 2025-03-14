@@ -4,14 +4,12 @@ import { MatListModule } from '@angular/material/list';
 import { ColetaItemComponent } from '../../components/coleta-item/coleta-item.component';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-
-interface Produto {
-  id: number;
-  nome: string;
-  quantidade: number;
-  unidade: string;
-  codigo: string;
-}
+import { Produto } from '../../../shared/models';
+import { lerCSVDoLocalStorage } from '../../../shared/utils';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-coletas-page',
@@ -21,39 +19,32 @@ interface Produto {
     ColetaItemComponent,
     RouterLink,
     MatButtonModule,
+    MatFormFieldModule,
+    MatIcon,
+    FormsModule,
+    MatInputModule,
   ],
   templateUrl: './coletas-page.component.html',
 })
 export class ColetasPageComponent implements OnInit {
-  produtos: Produto[] = [
-    {
-      id: 1,
-      nome: 'Tomate',
-      quantidade: 123,
-      unidade: 'KG',
-      codigo: '123321123',
-    },
-    {
-      id: 2,
-      nome: 'Livro',
-      quantidade: 123,
-      unidade: 'UNDS',
-      codigo: '123321342123',
-    },
-    {
-      id: 3,
-      nome: 'Cigarro',
-      quantidade: 123,
-      unidade: 'MC',
-      codigo: '12312321123',
-    },
-  ];
+  produtos!: Produto[];
+  produtosFiltrados!: Produto[];
+  filtro: string = '';
 
   readonly route = inject(ActivatedRoute);
 
   balancoId!: string;
 
   ngOnInit(): void {
+    this.produtos = lerCSVDoLocalStorage();
+    this.produtosFiltrados = [...this.produtos];
     this.balancoId = this.route.snapshot.paramMap.get('balancoId')!;
+  }
+
+  filtrarProdutos() {
+    const termo = this.filtro.toLowerCase().trim();
+    this.produtosFiltrados = this.produtos.filter(
+      (p) => p.nome.toLowerCase().includes(termo) || p.codigo.includes(termo)
+    );
   }
 }
