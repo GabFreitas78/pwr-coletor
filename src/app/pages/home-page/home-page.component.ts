@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ImportarDadosDialogComponent } from '../../components/importar-dados-dialog/importar-dados-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-home-page',
@@ -19,6 +20,7 @@ import { ImportarDadosDialogComponent } from '../../components/importar-dados-di
 })
 export class HomePageComponent {
   readonly dialog = inject(MatDialog);
+  readonly _snackBar = inject(MatSnackBar);
 
   handleImportarDados() {
     const buttonElement = document.activeElement as HTMLElement;
@@ -29,5 +31,34 @@ export class HomePageComponent {
       width: '80vw',
       maxHeight: '600px',
     });
+  }
+
+  handleExportarDados() {
+    const csvData = localStorage.getItem('csvData');
+    if (!csvData) {
+      this._snackBar.open('Sem dados para exportar', undefined, {
+        duration: 2000,
+      });
+      return;
+    }
+
+    // Cria um Blob a partir da string CSV
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+
+    // Gera uma URL temporária para o arquivo
+    const url = window.URL.createObjectURL(blob);
+
+    // Cria um elemento <a> para simular o download
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'dados.csv');
+
+    // Anexa ao DOM, dispara o clique e remove
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Libera a URL temporária
+    window.URL.revokeObjectURL(url);
   }
 }

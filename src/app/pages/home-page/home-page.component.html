@@ -6,6 +6,14 @@
       <button
         class="!flex !items-center !gap-2 !text-lg !leading-none !bg-secondary !text-white !rounded-md !font-semibold"
         mat-raised-button
+        (click)="handleExportarDados()"
+      >
+        <span class="material-icons text-3xl">download</span>
+        <span>EXPORTAR DADOS</span>
+      </button>
+      <button
+        class="!flex !items-center !gap-2 !text-lg !leading-none !bg-secondary !text-white !rounded-md !font-semibold"
+        mat-raised-button
         (click)="handleImportarDados()"
       >
         <span class="material-icons text-3xl">upload</span>
