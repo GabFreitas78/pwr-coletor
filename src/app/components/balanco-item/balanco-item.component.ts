@@ -1,11 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-balanco-item',
-  imports: [DatePipe, MatButtonModule],
+  imports: [DatePipe, MatButtonModule, RouterLink],
   templateUrl: './balanco-item.component.html',
 })
 export class BalancoItemComponent {

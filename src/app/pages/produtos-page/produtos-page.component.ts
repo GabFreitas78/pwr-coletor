@@ -9,7 +9,7 @@ import {
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { ColetaItemComponent } from '../../components/coleta-item/coleta-item.component';
 import { MatListModule } from '@angular/material/list';
@@ -95,6 +95,10 @@ export class ProdutosPageComponent {
 
   handleEncerrarBalanco() {
     this.router.navigate(['/']);
+  }
+
+  removerProdutosImportados() {
+    localStorage.removeItem('csvData');
   }
 
   ngOnDestroy(): void {

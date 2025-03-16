@@ -1,5 +1,15 @@
 <div class="flex flex-col min-h-screen">
-  <app-header [showBack]="true" title="Produtos importados" />
+  <app-header [showBack]="true" title="Produtos importados">
+    <button
+      (click)="removerProdutosImportados()"
+      matTooltip="Remover produtos importados"
+      mat-icon-button
+      aria-label="Remover produtos importados"
+      class="!flex !items-center !justify-center !text-white !font-lato"
+    >
+      <mat-icon>delete</mat-icon>
+    </button></app-header
+  >
 
   <main class="flex-grow bg-background flex flex-col">
     <!-- Barra de Pesquisa -->
@@ -17,7 +27,7 @@
       </mat-form-field>
     </div>
 
-    <mat-list class="!p-0">
+    <mat-list class="!p-0 !flex-grow !flex !flex-col">
       @for(produto of produtosPaginados; track produto.id) { @defer (on
       viewport) {
       <mat-list-item class="!h-auto !p-0">
@@ -65,7 +75,14 @@
           </div>
         </div>
       </div>
-      } }
+      } }@empty {
+      <div class="flex-1 flex justify-center items-center">
+        <div class="flex flex-col items-center text-text">
+          <mat-icon class="!w-auto !h-auto !text-[10rem]">folder_off</mat-icon>
+          <span class="text-2xl">Sem produtos importados</span>
+        </div>
+      </div>
+      }
     </mat-list>
 
     <!-- Paginação -->
