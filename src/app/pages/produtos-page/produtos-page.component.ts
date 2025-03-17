@@ -99,6 +99,8 @@ export class ProdutosPageComponent {
 
   removerProdutosImportados() {
     localStorage.removeItem('csvData');
+    this.produtos = [];
+    this.produtosPaginados = [];
   }
 
   ngOnDestroy(): void {

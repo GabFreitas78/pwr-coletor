@@ -28,6 +28,7 @@ export class ColetaItemComponent implements OnInit {
   }
 
   handleEdit() {
+    if (!this.balancoId()) return;
     this.editandoQuantidade = true;
     const inputEl = this.inputQtdRef().nativeElement;
     inputEl.readOnly = false;

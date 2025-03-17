@@ -34,8 +34,8 @@ export class HomePageComponent {
   }
 
   handleExportarDados() {
-    const csvData = localStorage.getItem('csvData');
-    if (!csvData) {
+    const balancosData = localStorage.getItem('balancos');
+    if (!balancosData) {
       this._snackBar.open('Sem dados para exportar', undefined, {
         duration: 2000,
       });
@@ -43,7 +43,7 @@ export class HomePageComponent {
     }
 
     // Cria um Blob a partir da string CSV
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([balancosData], { type: 'text/json;charset=utf-8;' });
 
     // Gera uma URL temporária para o arquivo
     const url = window.URL.createObjectURL(blob);
@@ -51,7 +51,7 @@ export class HomePageComponent {
     // Cria um elemento <a> para simular o download
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'dados.csv');
+    link.setAttribute('download', 'dados.json');
 
     // Anexa ao DOM, dispara o clique e remove
     document.body.appendChild(link);
