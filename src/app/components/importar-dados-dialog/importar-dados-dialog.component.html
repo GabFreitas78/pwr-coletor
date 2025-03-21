@@ -15,7 +15,7 @@
     (click)="triggerFileInput()"
     (drop)="onDrop($event)"
     (dragover)="onDragOver($event)"
-    class="!flex-grow border-3 hover:cursor-pointer border-dashed border-secondary rounded-md p-4 flex items-center flex-wrap gap-2 bg-secondary/20 text-secondary"
+    class="!flex-grow !overflow-visible border-3 hover:cursor-pointer border-dashed border-secondary rounded-md p-4 flex items-center flex-wrap gap-2 bg-secondary/20 text-secondary"
   >
     <mat-icon
       class="!m-auto !items-center !flex !justify-center !text-[4rem] !w-25 !h-20"
@@ -33,9 +33,12 @@
       type="file"
     />
   </div>
-  @if(selectedFilename()) {
-  <div class="bg-background rounded-md p-4 w-full mt-5">
-    <div class="flex justify-between items-center">
+
+  <div
+    class="bg-background rounded-md p-4 w-full mt-5 mb-4 min-h-20 flex items-center justify-between"
+  >
+    <div class="flex justify-between items-center w-full">
+      @if(selectedFilename()) {
       <div class="text-lg font-medium">
         {{ selectedFilename() }}
         <span class="ml-2 text-sm font-medium text-gray-500">{{
@@ -45,13 +48,47 @@
       <button mat-icon-button (click)="handleDeleteFile()">
         <mat-icon class="!text-red-500">delete</mat-icon>
       </button>
+      }@else {
+      <div class="text-lg font-medium">Nenhum arquivo selecionado</div>
+      }
     </div>
   </div>
-  }@else {
-  <p class="mt-5 py-2 text-lg font-medium text-grey-700">
-    Nenhum arquivo selecionado
-  </p>
-  }
+  <label class="text-lg text-black" id="importar-em-label"
+    >Importar dados em:</label
+  >
+  <mat-radio-group
+    aria-labeledby="importar-em-label"
+    class="flex flex-col mb-2"
+    [(ngModel)]="addTo"
+  >
+    <mat-radio-button value="new">Novo balanço</mat-radio-button>
+    <mat-radio-button value="existent">Balanço existente</mat-radio-button>
+  </mat-radio-group>
+  @if(addTo() === 'existent') {
+  <mat-form-field class="w-full">
+    <mat-label>Escolha um balanço</mat-label>
+    <input
+      type="text"
+      matInput
+      [(ngModel)]="balancoSelecionado"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      @for (option of filteredOptions(); track option) {
+      <mat-option [value]="option">{{ option.nome }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+  }@else {<mat-form-field class="w-full">
+    <mat-label>Nome do novo balanço</mat-label>
+    <input
+      matInput
+      #balancoNome
+      [(ngModel)]="balancoSelecionado"
+      maxlength="256"
+      placeholder="Nome para o novo balanço"
+    /> </mat-form-field
+  >}
 </mat-dialog-content>
 <mat-dialog-actions class="upload-actions">
   <button mat-button (click)="fechar()">Cancelar</button>
@@ -59,7 +96,7 @@
     mat-button
     color="primary"
     (click)="importarDados()"
-    [disabled]="!selectedFilename()"
+    [disabled]="!selectedFilename() || !balancoSelecionado()"
   >
     Importar
   </button>

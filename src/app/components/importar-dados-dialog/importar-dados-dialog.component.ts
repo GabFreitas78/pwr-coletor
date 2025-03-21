@@ -10,18 +10,47 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { lerCSVDoLocalStorage } from '../../../shared/utils';
+import {
+  lerBalancosDoLocalStorage,
+  lerCSVDoLocalStorage,
+} from '../../../shared/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { Balanco } from '../../../shared/models';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-importar-dados-dialog',
-  imports: [MatDialogModule, MatButtonModule, MatIconModule, MatRippleModule],
+  imports: [
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    MatRippleModule,
+    MatRadioModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    FormsModule,
+  ],
   templateUrl: './importar-dados-dialog.component.html',
 })
 export class ImportarDadosDialogComponent {
+  readonly addTo = signal<'new' | 'existent'>('new');
+  readonly balancoSelecionado = signal<string | Balanco>('');
   readonly fileInputRef =
     viewChild.required<ElementRef<HTMLInputElement>>('fileInput');
   readonly dialogRef = inject(MatDialogRef<ImportarDadosDialogComponent>);
+  options: Balanco[] = lerBalancosDoLocalStorage();
+  filteredOptions = computed(() => {
+    const value = this.balancoSelecionado();
+    if (!value) return this.options;
+    const name = typeof value === 'string' ? value : value?.nome;
+    return name ? this._filter(name as string) : this.options.slice();
+  });
+
   readonly _snackBar = inject(MatSnackBar);
   private selectedFile = signal<File | null>(null);
   readonly selectedFilename = computed(() => this.selectedFile()?.name);
@@ -45,6 +74,18 @@ export class ImportarDadosDialogComponent {
       return `${sizeInBytes} B`;
     }
   });
+
+  displayFn(balanco: Balanco): string {
+    return balanco && balanco.nome ? balanco.nome : '';
+  }
+
+  private _filter(nome: string): Balanco[] {
+    const filterValue = nome.toLowerCase();
+
+    return this.options.filter((option) =>
+      option.nome.toLowerCase().includes(filterValue)
+    );
+  }
 
   triggerFileInput() {
     this.fileInputRef().nativeElement.click();
