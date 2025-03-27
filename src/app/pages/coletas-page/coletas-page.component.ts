@@ -71,7 +71,7 @@ export class ColetasPageComponent implements OnInit, OnDestroy {
 
     this.produtosFiltrados = [...this.produtos]; // Inicializa os filtrados
     this.atualizarPaginacao(); // Define os produtos da primeira página
-    console.log(this.produtosPaginados);
+    this.filtrarProdutos('');
 
     this.searchSubject
       .pipe(
@@ -104,10 +104,31 @@ export class ColetasPageComponent implements OnInit, OnDestroy {
   filtrarProdutos(termo: string) {
     const busca = termo.toLowerCase().trim();
     this.produtosFiltrados = this.produtos.filter(
-      (p) => p.nome?.toLowerCase().includes(busca) || p.codigo.includes(busca)
+      (p) =>
+        (p.nome?.toLowerCase().includes(busca) || p.codigo.includes(busca)) &&
+        this.checaSeExibeProduto(busca, p)
     );
     this.pageIndex = 0; // Resetar para primeira página ao filtrar
     this.atualizarPaginacao();
+  }
+
+  checaSeExibeProduto(busca: string, produto: Produto): boolean {
+    if (busca !== '') {
+      return true;
+    }
+    const balanco = lerBalancosDoLocalStorage().find(
+      (b) => b.id === Number(this.balancoId)
+    );
+
+    const produtoQtd = balanco?.produtos.find(
+      (p) => p.id === produto.id
+    )?.quantidade;
+
+    if (produtoQtd && produtoQtd > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   handleEncerrarBalanco() {
