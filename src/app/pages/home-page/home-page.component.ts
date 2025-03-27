@@ -109,10 +109,9 @@ class ExportarDadosDialogComponent {
       return;
     }
 
-    const rows = this.balancoEscolhido.produtos.map((produto) => [
-      produto.id,
-      produto.quantidade,
-    ]);
+    const rows = this.balancoEscolhido.produtos
+      .filter((produto) => produto.quantidade > 0)
+      .map((produto) => [produto.id, produto.quantidade]);
 
     // Gera a string CSV utilizando ; como delimitador
     const csvString = Papa.unparse(rows, {
