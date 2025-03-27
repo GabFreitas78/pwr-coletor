@@ -93,9 +93,11 @@ export class ScanPageComponent implements OnInit {
     });
     this.dialogOpen = true;
 
-    dialogRef.afterClosed().subscribe((nova_quantidade: number) => {
+    dialogRef.afterClosed().subscribe((nova_quantidade?: number) => {
       if (nova_quantidade !== undefined) {
         try {
+          const quantidadeAnterior = getQtdProduto(codigo, this.balancoId);
+          nova_quantidade += quantidadeAnterior;
           patchProduto(codigo, nova_quantidade, this.balancoId);
           this.router.navigate(['/coleta/minhas-coletas', this.balancoId]);
         } catch (err) {
@@ -156,9 +158,7 @@ interface QuantidadeDialogData {
 class QuantidadeDialog implements OnInit {
   readonly dialogRef = inject(MatDialogRef<QuantidadeDialog>);
   readonly data = inject<QuantidadeDialogData>(MAT_DIALOG_DATA);
-  readonly quantidade = model<number>(
-    getQtdProduto(this.data.codigo, this.data.balancoId)
-  );
+  readonly quantidade = model<number>(0);
   readonly inputQtdRef =
     viewChild.required<ElementRef<HTMLInputElement>>('inputQtd');
 
