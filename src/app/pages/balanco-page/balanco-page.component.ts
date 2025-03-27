@@ -39,6 +39,10 @@ export class BalancoPageComponent implements OnInit {
   readonly dialog = inject(MatDialog);
 
   ngOnInit(): void {
+    this.atualizarBalancos();
+  }
+
+  atualizarBalancos() {
     this.balancos = lerBalancosDoLocalStorage();
   }
 

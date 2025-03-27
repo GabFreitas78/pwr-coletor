@@ -5,17 +5,27 @@
       Criado em: {{ dataCriacao() | date : "dd/MM/yyyy" }}
     </p>
   </div>
-  <div class="flex flex-col items-center gap-2">
-    <p class="text-md text-gray-600">{{ quantidadeProdutos() }} produtos</p>
+  <div class="flex items-center gap-4">
     <button
-      mat-flat-button
-      class="!text-lg"
-      [routerLink]="`../minhas-coletas/${id()}`"
+      (click)="handleDeletarBalanco()"
+      mat-icon-button
+      aria-label="Remover balanço"
+      class="!flex !items-center !justify-center !text-red-500 !font-lato"
     >
-      Visualizar balanço
+      <mat-icon>delete</mat-icon>
     </button>
-    <button mat-flat-button class="!text-lg" (click)="escolherBalanco()">
-      Coletar produtos
-    </button>
+    <div class="flex flex-col items-center gap-2">
+      <p class="text-md text-gray-600">{{ quantidadeProdutos() }} produtos</p>
+      <button
+        mat-flat-button
+        class="!text-lg"
+        [routerLink]="`../minhas-coletas/${id()}`"
+      >
+        Visualizar balanço
+      </button>
+      <button mat-flat-button class="!text-lg" (click)="escolherBalanco()">
+        Coletar produtos
+      </button>
+    </div>
   </div>
 </div>

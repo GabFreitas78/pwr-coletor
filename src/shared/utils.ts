@@ -133,3 +133,11 @@ export function salvarNovoBalanco(nome: string) {
   localStorage.setItem('balancos', JSON.stringify(balancos));
   console.log(`Novo balanço '${nome}' salvo com sucesso.`);
 }
+
+export function deleterBalanco(balancoId: number) {
+  console.log(`Deletando balanço com id ${balancoId} do local storage`);
+  const balancos = lerBalancosDoLocalStorage();
+  const novosBalancos = balancos.filter((balanco) => balanco.id !== balancoId);
+  localStorage.setItem('balancos', JSON.stringify(novosBalancos));
+  console.log(`Balanco ${balancoId} deletado com sucesso`);
+}

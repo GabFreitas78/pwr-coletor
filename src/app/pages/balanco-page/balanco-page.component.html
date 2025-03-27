@@ -10,8 +10,8 @@
       <mat-icon>add</mat-icon>
     </button>
   </app-header>
-  <main class="flex-grow bg-background">
-    <mat-list class="!p-0">
+  <main class="flex flex-grow bg-background">
+    <mat-list class="!p-0 !flex-grow !flex !flex-col">
       @for(balanco of balancos; track balanco.id) {
       <mat-list-item class="!h-auto !p-0">
         <app-balanco-item
@@ -19,11 +19,22 @@
           [id]="balanco.id"
           [nome]="balanco.nome"
           [quantidadeProdutos]="balanco.produtos.length"
+          (fuiDeletado)="atualizarBalancos()"
         />
       </mat-list-item>
       @if (!$last) {
       <mat-divider />
-      } }
+      } }@empty {
+      <div class="flex-1 flex justify-center items-center">
+        <div class="flex flex-col items-center text-text">
+          <mat-icon class="!w-auto !h-auto !text-[10rem]">folder_off</mat-icon>
+          <span class="text-2xl text-center"
+            >Sem balanços criados.<br />Adicione um novo balanço clicando no
+            ícone de "+" no canto superior direito.</span
+          >
+        </div>
+      </div>
+      }
     </mat-list>
   </main>
 </div>
