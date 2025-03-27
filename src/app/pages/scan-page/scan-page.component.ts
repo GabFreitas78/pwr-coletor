@@ -24,10 +24,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { getQtdProduto, patchProduto } from '../../../shared/utils';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-scan-page',
-  imports: [ZXingScannerModule, MatButtonModule, MatIconModule],
+  imports: [
+    ZXingScannerModule,
+    MatButtonModule,
+    MatIconModule,
+    HeaderComponent,
+  ],
   templateUrl: './scan-page.component.html',
   styleUrl: './scan-page.component.css',
 })
