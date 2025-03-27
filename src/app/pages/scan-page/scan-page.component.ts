@@ -50,6 +50,10 @@ export class ScanPageComponent implements OnInit {
   readonly _snackBar = inject(MatSnackBar);
   readonly router = inject(Router);
   readonly route = inject(ActivatedRoute);
+  readonly videoConfig: any = {
+    facingMode: { ideal: 'environment' },
+    advanced: [{ focusMode: 'continuous' }, { zoom: 1 }],
+  };
 
   flashlightCompativel?: boolean;
   cameraAtualIndex = 0;

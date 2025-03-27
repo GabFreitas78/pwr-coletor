@@ -10,6 +10,7 @@
     [device]="selectedCamera"
     (scanSuccess)="handleScanCodigo($event)"
     (scanError)="handleScanError($event)"
+    [videoConstraints]="videoConfig"
     [delayBetweenScanSuccess]="15000"
   ></zxing-scanner>
 
