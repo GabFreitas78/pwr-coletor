@@ -1,4 +1,6 @@
-id,nome,unidade,codigo
-1,"Fruta","Kg","1237193812"
-2,"Enlatado","Und","929312383"
-3,"Vela","Cx","789478292"
+000001,Fruta,Kg
+000002,Enlatado,Und
+000003,Vela,Cx
+000004,Banana,Kg
+000005,Cerveja,Und
+000006,Sorvete,Und

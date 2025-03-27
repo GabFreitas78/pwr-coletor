@@ -8,9 +8,8 @@ export function lerCSVDoLocalStorage(): Produto[] {
     return [];
   }
 
-  const resultado = Papa.parse<Produto>(csvData, {
+  const resultado = Papa.parse<Array<string>>(csvData, {
     skipEmptyLines: true,
-    header: true, // Garante que o cabeçalho seja reconhecido corretamente
   });
 
   if (resultado.errors.length > 0) {
@@ -18,12 +17,15 @@ export function lerCSVDoLocalStorage(): Produto[] {
     throw new Error('Formato inválido dos dados importados');
   }
 
-  return resultado.data.map((item, index) => ({
-    id: item.id || index.toString(),
-    nome: item.nome?.trim(),
-    unidade: item.unidade?.trim(),
-    codigo: item.codigo.trim(),
-  }));
+  return resultado.data.map((item, index) => {
+    const codigo = item.length === 4 ? item[3] : undefined;
+    return {
+      id: codigo ? item[0] : index.toString(),
+      nome: item[1],
+      unidade: item[2],
+      codigo: codigo ?? item[0],
+    };
+  });
 }
 
 export function lerBalancosDoLocalStorage(): Balanco[] {

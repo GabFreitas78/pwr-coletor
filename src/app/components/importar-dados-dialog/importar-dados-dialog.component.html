@@ -23,12 +23,12 @@
     >
     <p class="text-md font-medium text-center">
       Arraste & solte ou clique para importar sua base de produtos. O arquivo
-      deve estar no formato .csv e ter no máximo 4MB.
+      deve estar no formato .csv ou .txt e ter no máximo 4MB.
     </p>
     <input
       class="hidden"
       #fileInput
-      accept=".csv"
+      accept=".csv,.txt"
       (change)="onFileSelected($event)"
       type="file"
     />
