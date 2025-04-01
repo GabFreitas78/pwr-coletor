@@ -38,7 +38,6 @@ export class ProdutosPageComponent {
   produtos: Produto[] = []; // Todos os produtos
   produtosFiltrados: Produto[] = []; // Produtos filtrados
   produtosPaginados: Produto[] = []; // Apenas os produtos da página atual
-  filtro: string = '';
 
   readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
